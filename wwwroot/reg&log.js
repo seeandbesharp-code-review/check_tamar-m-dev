@@ -1,4 +1,27 @@
-﻿const Register = async () => {
+﻿const CheckPass = async () => {
+    const password = document.getElementById('reg-password').value;
+    if (password != 0) {
+        const passResponse = await fetch('api/passwords', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(password)
+        });
+        if (passResponse.ok) {
+            const score = await passResponse.json();
+            document.getElementById('pass').value = score;
+            if (score > 2) {
+                document.getElementById('score').innerHTML = 'סיסמא חזקה מספיק';
+            }
+            else {
+                document.getElementById('score').innerHTML = 'חוזק הסיסמא אינו מספק';
+            }
+        }
+        else {
+            console.log("the password request was fall");
+        }
+    }
+};
+const Register = async () => {
     const user = {
         name: document.getElementById('reg-name').value,
         email: document.getElementById('reg-email').value,

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Zxcvbn;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,6 +38,11 @@ namespace api_1.Controllers
         [HttpPost]
         public ActionResult<User> Post([FromBody] User user)
         {
+            int score = Core.EvaluatePassword(user.password).Score;
+            if(score < 3)
+            {
+                return BadRequest("the password is not strong enough");
+            }
             int numberOfUsers = System.IO.File.ReadLines(filePath).Count();
             user.id = numberOfUsers + 1;
             string userJson = JsonSerializer.Serialize(user);
